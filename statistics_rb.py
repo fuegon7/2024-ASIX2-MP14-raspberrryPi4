@@ -5,7 +5,8 @@ import matplotlib
 matplotlib.use('Agg')  # Configurar el backend de matplotlib para visualización no interactiva
 import matplotlib.pyplot as plt
 
-# Configuración de la conexión a la base de datos
+connection = None  # Inicializar connection fuera del bloque try
+
 try:
     connection = mysql.connector.connect(
         host='localhost',
@@ -53,7 +54,7 @@ except mysql.connector.Error as e:
     print("Error al conectar a MySQL:", e)
 
 finally:
-    # Cerrar la conexión a la base de datos
-    if connection.is_connected():
+    # Cerrar la conexión a la base de datos si está definida
+    if connection and connection.is_connected():
         connection.close()
         print("Conexión a MySQL cerrada")
