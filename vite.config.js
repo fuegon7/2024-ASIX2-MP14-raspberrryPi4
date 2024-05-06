@@ -12,7 +12,7 @@ export default defineConfig({
         target: `http://localhost:3657`, // URL del servidor de Express
         changeOrigin: true,
         secure: false, // Cambia a `false` si estás usando HTTP sin SSL
-        rewrite: (path) => path.replace(/^\/api/, ''), // Elimina /api del inicio de la URL
+        //rewrite: (path) => path.replace(/^\/api/, ''), // Elimina /api del inicio de la URL
       },
     },
   },
