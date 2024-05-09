@@ -1,40 +1,52 @@
+// Importar las librer�as necesarias
 import express from 'express';
-import mysql from 'mysql';
-import dotevn from 'dotenv'
-dotevn.config()
+import mariadb from 'mariadb';
+import dotenv from 'dotenv';
 
-const api = express();
+// Configurar las variables de entorno
+dotenv.config();
 
-// Buscar los datos para la conneixion
-const connection = mysql.createConnection({
+// Crear una nueva pool de conexiones
+const pool = mariadb.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE
 });
 
-connection.connect(err => {
-  if (err) {
+// Crear una funci�n para manejar la conexi�n de la base de datos
+async function connectToDatabase() {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    console.log('Conexi�n a la base de datos MariaDB establecida');
+    return conn;
+  } catch (err) {
     console.error('Error al conectar a la base de datos:', err);
-    return;
+    throw err;
   }
-  console.log('Conexión a la base de datos MySQL establecida');
-});
+}
 
-// Query para obtener la tabla users.
-api.get('/api/data', (req, res) => {
-  const query = 'SELECT * FROM temperature';
-  connection.query(query, (err, results) => {
-    if (err) {
-      console.error('Error al obtener usuarios:', err);
-      res.status(500).json({ error: 'Error al obtener usuarios' });
-      return;
-    }
-    res.json(results);
-  });
+// Iniciar la aplicaci�n express
+const api = express();
+
+// Ruta para obtener los datos de la tabla temperature
+api.get('/api/data', async (req, res) => {
+  let conn;
+  try {
+    conn = await connectToDatabase();
+    const rows = await conn.query('SELECT * FROM temperature');
+    res.json(rows);
+  } catch (err) {
+    console.error('Error al obtener datos de la base de datos:', err);
+    res.status(500).json({ error: 'Error al obtener datos de la base de datos' });
+  } finally {
+    if (conn) conn.end(); // Cerrar la conexi�n cuando hayamos terminado
+  }
 });
 
 // Iniciar el servidor
-api.listen(process.env.API_PORT, () => {
-  console.log(`Servidor de API iniciado en http://localhost:${process.env.API_PORT}`);
+const port = process.env.API_PORT || 3000;
+api.listen(port, () => {
+  console.log(`Servidor de API iniciado en http://localhost:${port}`);
 });

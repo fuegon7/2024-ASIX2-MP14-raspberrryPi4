@@ -22,7 +22,7 @@ case "$dbcreation" in
 	DROP USER IF EXISTS 'gerard'@'localhost';
 
 	## Afegir l'usuari gerard amb contrasenya gerard y tots els permisos a la base de dades vueproject
-	CREATE USER 'gerard'@'localhost' IDENTIFIED WITH mysql_native_password BY 'gerard';
+	CREATE USER 'gerard'@'localhost' IDENTIFIED BY 'gerard';
 	GRANT ALL PRIVILEGES ON pyproject.* TO 'gerard'@'localhost';
 	flush privileges;
 
