@@ -35,13 +35,11 @@ case "$dbcreation" in
 	    PRIMARY KEY (id)
 	);
 
-	INSERT INTO temperature (temperature,humidity) VALUES ('25','40');
-	INSERT INTO temperature (temperature,humidity) VALUES ('28','48');
-	INSERT INTO temperature (temperature,humidity) VALUES ('30','56');
-	INSERT INTO temperature (temperature,humidity) VALUES ('34','62');
-	INSERT INTO temperature (temperature,humidity) VALUES ('40','70');
-	INSERT INTO temperature (temperature,humidity) VALUES ('38','61');
-	INSERT INTO temperature (temperature,humidity) VALUES ('28','50');
+	INSERT INTO temperature (temperature,humidity,date) VALUES ('25','40','2024-05-09 12:00:00');
+	INSERT INTO temperature (temperature,humidity,date) VALUES ('28','48','2024-05-09 13:00:00');
+	INSERT INTO temperature (temperature,humidity,date) VALUES ('30','56','2024-05-09 14:00:00');
+	INSERT INTO temperature (temperature,humidity,date) VALUES ('33','52','2024-05-09 15:00:00');
+	INSERT INTO temperature (temperature,humidity,date) VALUES ('28','42','2024-05-09 16:00:00');
 EOF
 	;;
 	[nNnoNO] ) 
