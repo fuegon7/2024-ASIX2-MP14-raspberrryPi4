@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Inicio from '../views/Inicio.vue';
-import Grafiques from '../views/graphics.vue';
+import Grafiques from '../views/GraphViews.vue';
 
 const routes = [
   { path: '/',  component: Inicio },
