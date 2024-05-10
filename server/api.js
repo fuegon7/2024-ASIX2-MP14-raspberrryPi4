@@ -1,4 +1,4 @@
-// Importar las librer�as necesarias
+// Importar las librerías necesarias
 import express from 'express';
 import mariadb from 'mariadb';
 import dotenv from 'dotenv';
@@ -14,12 +14,12 @@ const pool = mariadb.createPool({
   database: process.env.DB_DATABASE
 });
 
-// Crear una funci�n para manejar la conexi�n de la base de datos
+// Crear una función para manejar la conexión de la base de datos
 async function connectToDatabase() {
   let conn;
   try {
     conn = await pool.getConnection();
-    console.log('Conexi�n a la base de datos MariaDB establecida');
+    console.log('Conexión a la base de datos MariaDB establecida');
     return conn;
   } catch (err) {
     console.error('Error al conectar a la base de datos:', err);
@@ -27,7 +27,7 @@ async function connectToDatabase() {
   }
 }
 
-// Iniciar la aplicaci�n express
+// Iniciar la aplicación express
 const api = express();
 
 // Ruta para obtener los datos de la tabla temperature
@@ -41,7 +41,7 @@ api.get('/api/data', async (req, res) => {
     console.error('Error al obtener datos de la base de datos:', err);
     res.status(500).json({ error: 'Error al obtener datos de la base de datos' });
   } finally {
-    if (conn) conn.end(); // Cerrar la conexi�n cuando hayamos terminado
+    if (conn) conn.end(); // Cerrar la conexión cuando hayamos terminado
   }
 });
 

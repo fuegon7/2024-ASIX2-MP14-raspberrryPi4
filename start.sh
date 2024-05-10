@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo service mysql start
+sudo service mariadb restart
 
 read -p  "Vols crear la base de dades? (s/N)" dbcreation
 
@@ -7,7 +7,7 @@ case "$dbcreation" in
 	[yYsSsiyes] )
 	echo "ok, creare la base de dades de nou"
 	echo "Contrasenya de l'usuari root de MySQL"
-	mysql -u root -proot -vv <<EOF || { echo ""; exit 1; }
+	sudo mysql -u root -proot -vv <<EOF || { echo ""; exit 1; }
 
 	## Comprobar si existeix la base de dades vueproject y eliminar-la
 	DROP DATABASE IF EXISTS pyproject;
@@ -35,11 +35,11 @@ case "$dbcreation" in
 	    PRIMARY KEY (id)
 	);
 
-	INSERT INTO temperature (temperature,humidity,date) VALUES ('25','40','2024-05-09 12:00:00');
-	INSERT INTO temperature (temperature,humidity,date) VALUES ('28','48','2024-05-09 13:00:00');
-	INSERT INTO temperature (temperature,humidity,date) VALUES ('30','56','2024-05-09 14:00:00');
-	INSERT INTO temperature (temperature,humidity,date) VALUES ('33','52','2024-05-09 15:00:00');
-	INSERT INTO temperature (temperature,humidity,date) VALUES ('28','42','2024-05-09 16:00:00');
+	# INSERT INTO temperature (temperature,humidity,date) VALUES ('25','40','2024-05-09 12:00:00');
+	# INSERT INTO temperature (temperature,humidity,date) VALUES ('28','48','2024-05-09 13:00:00');
+	# INSERT INTO temperature (temperature,humidity,date) VALUES ('30','56','2024-05-09 14:00:00');
+	# INSERT INTO temperature (temperature,humidity,date) VALUES ('33','52','2024-05-09 15:00:00');
+	# INSERT INTO temperature (temperature,humidity,date) VALUES ('28','42','2024-05-09 16:00:00');
 EOF
 	;;
 	[nNnoNO] ) 
