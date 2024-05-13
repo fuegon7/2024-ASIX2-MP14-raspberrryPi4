@@ -49,4 +49,4 @@ esac
 
 # Iniciar el servidor vite i api
 sudo npm install
-sudo npm run dev
+sudo npm run dev --host
