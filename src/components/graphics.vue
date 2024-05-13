@@ -1,11 +1,6 @@
 <template>
   <div class="container">
     <Line v-if="loaded" :data="chartData" :options="chartOptions"/>
-    <button model="chart_id" :value=1 @click="label_timeset(1)">Horas</button>
-    <button disabled model="chart_id" :value=2 @click="label_timeset(2)">Dias</button>
-    <button disabled model="chart_id" :value=3 @click="label_timeset(3)">Semana</button>
-    <button disabled model="chart_id" :value=4 @click="label_timeset(4)">Mes</button>
-    <button disabled model="chart_id" :value=5 @click="label_timeset(5)">Año</button>
   </div>
 </template>
 
@@ -18,11 +13,11 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  scales
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
 import axios from 'axios';
-import Utils from 'Utils';
 
 ChartJS.register(
   CategoryScale,
@@ -34,6 +29,9 @@ ChartJS.register(
   Legend
 )
 
+var numsamples = 10;
+var AvgTemperatureChartOptions
+
 export default {
   name: 'LineChart',
   components: { Line },
@@ -41,22 +39,8 @@ export default {
       loaded: false,
       chartData: null,
       originalData: [],
-      chartOptions: {
-        animation: {
-        duration: 2000, // Duración de la animación en milisegundos
-        },
-        responsiveAnimationDuration: 0, // Desactiva las animaciones al cambiar el tamaño
-        scales: {
-          x: {
-            type: 'realtime', // Habilita la escala de tiempo en tiempo real
-            realtime: {
-              delay: 2000, // Retraso de la animación en milisegundos
-            },
-          },
-        },
       tempSum: 0,
       count: 0,
-    }
   }),
   async mounted() {
     this.loaded = false
@@ -77,8 +61,35 @@ export default {
           label: 'Humetat',
           backgroundColor: 'blue',
           data: response.data.map(item => item.humidity)
-        }]
+        },
+      ]
       };
+      this.chartOptions = {
+        showLines: true,
+        animation: {
+          duration: 1000,
+          easing: 'linear'
+        },
+        tooltips: {
+          enabled: false
+        },
+        responsive: true,
+        scales: {
+          xAxis: [{
+            id: 'temperature',
+            position: 'left',
+            gridLines: {
+              drawTicks: false
+            },
+            ticks: {
+              fontSize: 10,
+              max: 100,
+              min: 0,
+              stepSize: 25,
+            }
+          }]
+        }
+      }
       this.loaded = true
     } catch (e) {
       console.error(e)
