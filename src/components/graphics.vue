@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Line v-if="loaded" :data="chartData" />
+    <Line v-if="loaded" :data="chartData" :options="chartOptions"/>
     <button model="chart_id" :value=1 @click="label_timeset(1)">Horas</button>
     <button disabled model="chart_id" :value=2 @click="label_timeset(2)">Dias</button>
     <button disabled model="chart_id" :value=3 @click="label_timeset(3)">Semana</button>
@@ -41,8 +41,22 @@ export default {
       loaded: false,
       chartData: null,
       originalData: [],
+      chartOptions: {
+        animation: {
+        duration: 2000, // Duración de la animación en milisegundos
+        },
+        responsiveAnimationDuration: 0, // Desactiva las animaciones al cambiar el tamaño
+        scales: {
+          x: {
+            type: 'realtime', // Habilita la escala de tiempo en tiempo real
+            realtime: {
+              delay: 2000, // Retraso de la animación en milisegundos
+            },
+          },
+        },
       tempSum: 0,
       count: 0,
+    }
   }),
   async mounted() {
     this.loaded = false
@@ -74,22 +88,24 @@ export default {
     setInterval(async () => {
       const response = await axios.get('/api/data');
       const newData = response.data;
-      const lastMinuteData = newData.filter(item => {
-        return Date.now() - new Date(item.date).getTime() < 60000;
-      });
-      
+      const lastData = newData[newData.length - 1]; // Obtiene el último dato
     
-      if (lastMinuteData.length > 0) {
-        const avgTemp = lastMinuteData.reduce((sum, item) => sum + item.temperature, 0) / lastMinuteData.length;
-        const avgHumi = lastMinuteData.reduce((sum, item) => sum + item.humidity, 0) / lastMinuteData.length;
+      if (lastData) {
         let newChartData = JSON.parse(JSON.stringify(this.chartData)); // Crea una copia de this.chartData
-        newChartData.labels.push(new Date().toLocaleTimeString());
-        newChartData.datasets[0].data.push(avgTemp);
-        newChartData.datasets[0].data.push(avgHumi);
+        newChartData.labels.push(new Date(lastData.date).toLocaleTimeString());
+        newChartData.datasets[0].data.push(lastData.temperature);
+        newChartData.datasets[1].data.push(lastData.humidity);
+        this.chartData = newChartData; // Asigna la copia actualizada a this.chartData
+
+        if (newChartData.labels.length > 10) {
+          newChartData.labels.shift(); // Elimina el primer elemento de labels
+          newChartData.datasets[0].data.shift(); // Elimina el primer elemento de data de temperatura
+          newChartData.datasets[1].data.shift(); // Elimina el primer elemento de data de humedad
+        }
+
         this.chartData = newChartData; // Asigna la copia actualizada a this.chartData
       }
     }, 5000);
-
   }
 }
 
