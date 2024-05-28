@@ -1,12 +1,9 @@
-// Importar las librerías necesarias
 import express from 'express';
 import mariadb from 'mariadb';
 import dotenv from 'dotenv';
 
-// Configurar las variables de entorno
 dotenv.config();
 
-// Crear una nueva pool de conexiones
 const pool = mariadb.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -14,7 +11,6 @@ const pool = mariadb.createPool({
   database: process.env.DB_DATABASE
 });
 
-// Crear una función para manejar la conexión de la base de datos
 async function connectToDatabase() {
   let conn;
   try {
@@ -27,10 +23,8 @@ async function connectToDatabase() {
   }
 }
 
-// Iniciar la aplicación express
 const api = express();
 
-// Ruta para obtener los datos de la tabla temperature
 api.get('/api/data', async (req, res) => {
   let conn;
   try {
@@ -41,11 +35,10 @@ api.get('/api/data', async (req, res) => {
     console.error('Error al obtener datos de la base de datos:', err);
     res.status(500).json({ error: 'Error al obtener datos de la base de datos' });
   } finally {
-    if (conn) conn.end(); // Cerrar la conexión cuando hayamos terminado
+    if (conn) conn.end();
   }
 });
 
-// Iniciar el servidor
 const port = process.env.API_PORT || 3000;
 api.listen(port, () => {
   console.log(`Servidor de API iniciado en http://localhost:${port}`);

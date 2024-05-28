@@ -7,7 +7,7 @@ case "$dbcreation" in
 	[yYsSsiyes] )
 	echo "ok, creare la base de dades de nou"
 	echo "Contrasenya de l'usuari root de MySQL"
-	sudo mysql -u root -proot -vv <<EOF || { echo ""; exit 1; }
+	sudo mariadb -u root -proot -vv <<EOF || { echo ""; exit 1; }
 
 	## Comprobar si existeix la base de dades vueproject y eliminar-la
 	DROP DATABASE IF EXISTS pyproject;
